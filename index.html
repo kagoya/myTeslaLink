@@ -8,25 +8,44 @@
         /* テスラのUIにマッチするダークテーマ */
         body { background-color: #111111; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; text-align: center; margin: 0; }
         
-        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 850px; margin: 0 auto 25px auto; padding: 0 10px; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 850px; margin: 0 auto 25px auto; padding: 0 10px; flex-wrap: wrap; gap: 10px; }
         h1 { font-size: 26px; color: #e82127; margin: 0; font-weight: bold; }
         
-        /* 管理モード切り替えボタン */
-        .manage-toggle-btn { background-color: #2c2c2e; border: 1px solid #3a3a3c; color: #aaa; padding: 12px 20px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .header-buttons { display: flex; gap: 10px; }
+        
+        /* ボタン類 */
+        .header-btn { background-color: #2c2c2e; border: 1px solid #3a3a3c; color: #aaa; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .header-btn:active { background-color: #3a3a3c; }
         .manage-toggle-btn.active { background-color: #e82127; color: #fff; border-color: #e82127; }
 
+        /* 🔒 認証画面のスタイル */
+        #authContainer { display: none; max-width: 320px; margin: 80px auto 0 auto; padding: 30px 20px; background: #1c1c1e; border: 1px solid #2c2c2e; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        #authContainer.active { display: block; }
+        #mainContent { display: none; }
+        #mainContent.active { display: block; }
+        #authContainer h2 { font-size: 20px; margin-bottom: 20px; color: #aaa; }
+        .pin-display { background: #2c2c2e; border: 1px solid #3a3a3c; font-size: 32px; letter-spacing: 15px; padding: 10px; border-radius: 8px; margin-bottom: 25px; height: 45px; display: flex; align-items: center; justify-content: center; color: #e82127; font-weight: bold; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .key-btn { background: #2c2c2e; border: 1px solid #3a3a3c; color: white; font-size: 24px; font-weight: bold; padding: 15px 0; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; }
+        .key-btn:active { background: #3a3a3c; }
+        .key-btn.clear { background: #3a3a3c; font-size: 16px; }
+        #authErrorMsg { color: #e82127; font-size: 14px; margin-top: 15px; height: 20px; font-weight: bold; }
+
+        /* ローディング表示 */
+        #loading { color: #aaa; font-size: 16px; margin-top: 20px; margin-bottom: 20px; }
+        #errorMsg { color: #e82127; margin-top: 20px; display: none; font-weight: bold; }
+        
         /* リンクボタンのグリッド */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 850px; margin: 0 auto 40px auto; }
         .btn-card { position: relative; display: flex; align-items: center; justify-content: center; background-color: #1c1c1e; border: 1px solid #2c2c2e; border-radius: 12px; height: 80px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); box-sizing: border-box; }
         
-        /* 通常時のリンクボタン */
+        /* リンクボタン */
         .btn { color: #ffffff; text-decoration: none; font-size: 18px; font-weight: 500; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 15px; box-sizing: border-box; word-break: break-all; border-radius: 12px; }
         .btn:active { background-color: #2c2c2e; }
         
-        /* Faviconのスタイル */
         .favicon { width: 24px; height: 24px; border-radius: 4px; object-fit: contain; flex-shrink: 0; background-color: rgba(255, 255, 255, 0.1); padding: 2px; }
 
-        /* 管理モード中のリンクボタン（周りに隙間を作る） */
+        /* 管理モード中のスタイル */
         .edit-mode .btn { width: 55%; height: auto; padding: 10px 5px; font-size: 15px; background-color: #2c2c2e; border: 1px solid #3a3a3c; pointer-events: none; }
 
         /* ◀ ▶ 並び替えボタン */
@@ -37,42 +56,74 @@
         .edit-mode .move-btn { display: flex; }
         .move-btn:disabled { color: #444; background: transparent; cursor: not-allowed; }
 
-        /* ✎ 編集・× 削除ボタン（上部に配置） */
+        /* ✎ 編集・× 削除ボタン */
         .edit-controls { display: none; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); gap: 15px; z-index: 10; }
         .edit-mode .edit-controls { display: flex; }
         .action-btn { color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .edit-btn { background-color: #007aff; }
         .delete-btn { background-color: #e82127; }
 
-        /* 番号指定での一括移動コントロール（下部に配置） */
+        /* 番号指定での一括移動コントロール */
         .order-control { display: none; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); z-index: 10; }
         .edit-mode .order-control { display: flex; }
         .order-select { background-color: #2c2c2e; color: #fff; border: 1px solid #3a3a3c; border-radius: 12px; padding: 2px 6px; font-size: 12px; cursor: pointer; outline: none; text-align: center; }
-        .order-select:focus { border-color: #e82127; }
 
         /* 編集・追加共通フォームエリア */
-        .form-box { background-color: #1c1c1e; border: 1px solid #2c2c2e; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: left; }
+        .form-box { display: none; background-color: #1c1c1e; border: 1px solid #2c2c2e; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: left; }
+        .edit-mode-active .form-box { display: block; } /* 管理モード時に表示 */
         .form-box h2 { font-size: 18px; margin-top: 0; color: #aaa; text-align: center; }
         .input-group { margin-bottom: 12px; }
         .input-group label { display: block; font-size: 13px; color: #888; margin-bottom: 4px; }
         input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #3a3a3c; background-color: #2c2c2e; color: #fff; font-size: 16px; box-sizing: border-box; }
         input:focus { border-color: #e82127; outline: none; }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-group-form { display: flex; gap: 10px; margin-top: 15px; }
         .submit-btn { background-color: #e82127; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .submit-btn:active { background-color: #b8171c; }
         .cancel-btn { background-color: #3a3a3c; color: #fff; border: none; padding: 12px; width: 40%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; display: none; }
+        
+        /* 画面全体を覆う無効化レイヤー（通信中） */
+        #overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 100; }
     </style>
 </head>
 <body>
 
-    <!-- 🌐 メインのポータル画面 -->
+    <div id="overlay"></div>
+
+    <!-- 🔒 簡易暗証番号キーパッド -->
+    <div id="authContainer">
+        <h2>PINを入力してください</h2>
+        <div class="pin-display" id="pinDisplay"></div>
+        <div class="keypad">
+            <button class="key-btn" onclick="pressKey('1')">1</button>
+            <button class="key-btn" onclick="pressKey('2')">2</button>
+            <button class="key-btn" onclick="pressKey('3')">3</button>
+            <button class="key-btn" onclick="pressKey('4')">4</button>
+            <button class="key-btn" onclick="pressKey('5')">5</button>
+            <button class="key-btn" onclick="pressKey('6')">6</button>
+            <button class="key-btn" onclick="pressKey('7')">7</button>
+            <button class="key-btn" onclick="pressKey('8')">8</button>
+            <button class="key-btn" onclick="pressKey('9')">9</button>
+            <button class="key-btn clear" onclick="pressKey('C')">消去</button>
+            <button class="key-btn" onclick="pressKey('0')">0</button>
+            <button class="key-btn clear" onclick="pressKey('B')">⌫</button>
+        </div>
+        <div id="authErrorMsg"></div>
+    </div>
+
     <div id="mainContent">
         <div class="header-container">
             <h1>Tesla Portal</h1>
-            <button id="toggleModeBtn" class="manage-toggle-btn" onclick="toggleEditMode()">⚙️ 管理モード</button>
+            <div class="header-buttons">
+                <button class="header-btn" onclick="logout()">🔒 ロック</button>
+                <button class="header-btn" onclick="fetchLinks()">🔄 同期(読込)</button>
+                <button id="toggleModeBtn" class="header-btn manage-toggle-btn" onclick="toggleEditMode()">⚙️ 管理モード</button>
+            </div>
         </div>
 
+        <div id="loading">クラウドからリンクを読み込み中...</div>
+        <div id="errorMsg">データの取得・保存に失敗しました。</div>
+        
         <div class="grid" id="linkContainer"></div>
 
         <div class="form-box">
@@ -86,25 +137,186 @@
                 <label for="siteUrl">URL</label>
                 <input type="url" id="siteUrl" placeholder="https://example.com">
             </div>
-            <div class="btn-group">
+            <div class="btn-group-form">
                 <button id="cancelBtn" class="cancel-btn" onclick="resetForm()">キャンセル</button>
-                <button id="submitBtn" class="submit-btn" onclick="handleSubmit()">リストに追加する</button>
+                <button id="submitBtn" class="submit-btn" onclick="handleSubmit()">追加してクラウドに保存</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 初期お気に入りリスト（ストレージが空のときのみ使用）
-        const defaultLinks = [
-            { name: "YouTube", url: "https://youtube.com" },
-            { name: "Netflix", url: "https://netflix.com" },
-            { name: "Google Maps", url: "https://google.co.jp" }
-        ];
+        // 🔑 【重要】ここにGASで発行した「ウェブアプリのURL」を貼り付けてください
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxmMifb-NFdzOcdJnywlOkLlJz9hDAtsJD2141pwK-YqV2kSSZCXxR7ZPHtlTbP7DmZ/exec"; // ←書き換えてください
 
-        let savedLinks = JSON.parse(localStorage.getItem('tesla_custom_links')) || defaultLinks;
+        let savedLinks = [];
         let isEditMode = false;
+        let currentPinInput = "";
+        let authPin = localStorage.getItem('tesla_portal_pin');
 
-        // ボタン一覧のレンダリング
+        // ページ読み込み時に実行
+        window.onload = () => {
+            if (authPin) {
+                showMainContent();
+                fetchLinks();
+            } else {
+                showAuth();
+            }
+        };
+
+        function showAuth() {
+            document.getElementById('authContainer').classList.add('active');
+            document.getElementById('mainContent').classList.remove('active');
+            currentPinInput = "";
+            document.getElementById('pinDisplay').textContent = "";
+            document.getElementById('authErrorMsg').textContent = "";
+            hideLoading();
+        }
+
+        function showMainContent() {
+            document.getElementById('authContainer').classList.remove('active');
+            document.getElementById('mainContent').classList.add('active');
+        }
+
+        function pressKey(key) {
+            const display = document.getElementById('pinDisplay');
+            const error = document.getElementById('authErrorMsg');
+            error.textContent = "";
+
+            if (key === 'C') {
+                currentPinInput = "";
+            } else if (key === 'B') {
+                currentPinInput = currentPinInput.slice(0, -1);
+            } else {
+                if (currentPinInput.length < 4) currentPinInput += key;
+            }
+            display.textContent = "●".repeat(currentPinInput.length);
+
+            if (currentPinInput.length === 4) {
+                authPin = currentPinInput;
+                showMainContent();
+                fetchLinks(true); // ログイン試行としてfetch
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('tesla_portal_pin');
+            authPin = null;
+            if(isEditMode) toggleEditMode();
+            showAuth();
+        }
+
+        function showLoading(msg) {
+            document.getElementById('loading').textContent = msg;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function showError(msg) {
+            hideLoading();
+            const err = document.getElementById('errorMsg');
+            err.textContent = msg;
+            err.style.display = 'block';
+        }
+
+        // ==========================================
+        // クラウド（GAS）との通信処理
+        // ==========================================
+
+        // 読み込み（GET）
+        async function fetchLinks(isLoginAttempt = false) {
+            if(isEditMode) toggleEditMode(); // 編集中なら閉じる
+            showLoading(isLoginAttempt ? "認証中..." : "クラウドからリンクを読み込み中...");
+            
+            try {
+                if (GAS_URL.includes("AKfycbyfxxxxxxxxx")) {
+                    showError("⚠️ GASのURLが設定されていません。コードを書き換えてください。");
+                    if (isLoginAttempt) showAuth();
+                    return;
+                }
+
+                // PINをURLに含めて送信
+                const urlWithPin = `${GAS_URL}?pin=${authPin}`;
+                const response = await fetch(urlWithPin);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const result = await response.json();
+
+                // GAS側から認証エラーが返ってきた場合
+                if (result.error === "Unauthorized") {
+                    localStorage.removeItem('tesla_portal_pin');
+                    authPin = null;
+                    showAuth();
+                    if (isLoginAttempt) {
+                        document.getElementById('authErrorMsg').textContent = "PINが正しくありません。";
+                    } else {
+                        document.getElementById('authErrorMsg').textContent = "認証の有効期限が切れました。";
+                    }
+                    return;
+                }
+                
+                // 認証成功時、PINをローカルストレージに保存（次回から入力不要）
+                if (isLoginAttempt) {
+                    localStorage.setItem('tesla_portal_pin', authPin);
+                }
+
+                savedLinks = result;
+                hideLoading();
+                renderLinks();
+            } catch (error) {
+                console.error(error);
+                if (isLoginAttempt) {
+                    showAuth();
+                    document.getElementById('authErrorMsg').textContent = "通信エラーが発生しました。";
+                } else {
+                    showError("データの取得に失敗しました。電波状況を確認してください。");
+                }
+            }
+        }
+
+        // 保存（POST）
+        async function saveToServer() {
+            showLoading("クラウドへ変更を保存中...");
+            
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    // 送信データにPINを含める
+                    body: JSON.stringify({ pin: authPin, data: savedLinks }),
+                    redirect: 'follow'
+                });
+                
+                const result = await response.json();
+                
+                // 認証エラーチェック
+                if (result.status === "error") {
+                    if (result.message === "Unauthorized") {
+                        alert("認証エラー: ロック解除からやり直してください");
+                        logout();
+                        return;
+                    }
+                    throw new Error(result.message);
+                }
+                
+                hideLoading();
+                renderLinks();
+            } catch (error) {
+                console.error(error);
+                showError("保存に失敗しました。変更が元に戻ります。");
+                fetchLinks(); // エラー時はサーバーの最新状態に戻す
+            }
+        }
+
+        // ==========================================
+        // UI・操作処理
+        // ==========================================
+
         function renderLinks() {
             const container = document.getElementById('linkContainer');
             container.innerHTML = ''; 
@@ -113,7 +325,7 @@
                 const card = document.createElement('div');
                 card.className = 'btn-card' + (isEditMode ? ' edit-mode' : '');
                 
-                // ◀ 移動ボタン
+                // ◀ 移動
                 const moveLeftBtn = document.createElement('button');
                 moveLeftBtn.className = 'move-btn move-left';
                 moveLeftBtn.innerHTML = '◀';
@@ -121,35 +333,26 @@
                 moveLeftBtn.onclick = () => moveLink(index, -1);
                 card.appendChild(moveLeftBtn);
                 
-                // メインリンクボタン
+                // リンク本体
                 const a = document.createElement('a');
                 a.href = isEditMode ? '#' : link.url;
                 a.className = 'btn';
                 
-                // Favicon画像の追加
                 try {
                     const urlObj = new URL(link.url);
                     const img = document.createElement('img');
-                    // GoogleのFavicon取得APIを利用
                     img.src = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
                     img.className = 'favicon';
-                    // 読み込みエラー時（アイコンがない場合など）は非表示にする
-                    img.onerror = function() {
-                        this.style.display = 'none';
-                    };
+                    img.onerror = function() { this.style.display = 'none'; };
                     a.appendChild(img);
-                } catch(e) {
-                    // URLが不正な場合はスキップ
-                }
+                } catch(e) {}
 
-                // テキストの追加
                 const span = document.createElement('span');
                 span.textContent = link.name;
                 a.appendChild(span);
-                
                 card.appendChild(a);
                 
-                // ▶ 移動ボタン
+                // ▶ 移動
                 const moveRightBtn = document.createElement('button');
                 moveRightBtn.className = 'move-btn move-right';
                 moveRightBtn.innerHTML = '▶';
@@ -157,18 +360,16 @@
                 moveRightBtn.onclick = () => moveLink(index, 1);
                 card.appendChild(moveRightBtn);
                 
-                // 管理モードのコントロール
+                // 管理コントロール（編集・削除）
                 const controls = document.createElement('div');
                 controls.className = 'edit-controls';
                 
-                // ✎ 編集ボタン
                 const editBtn = document.createElement('button');
                 editBtn.className = 'action-btn edit-btn';
                 editBtn.innerHTML = '✎';
                 editBtn.onclick = () => startEdit(index);
                 controls.appendChild(editBtn);
                 
-                // × 削除ボタン
                 const delBtn = document.createElement('button');
                 delBtn.className = 'action-btn delete-btn';
                 delBtn.innerHTML = '×';
@@ -177,14 +378,13 @@
                 
                 card.appendChild(controls);
 
-                // 番号指定で一気に移動するセレクトボックス
+                // 番号指定移動
                 if (isEditMode) {
                     const orderControl = document.createElement('div');
                     orderControl.className = 'order-control';
                     const orderSelect = document.createElement('select');
                     orderSelect.className = 'order-select';
                     
-                    // 現在のリンク数分だけ選択肢を作る
                     for (let i = 0; i < savedLinks.length; i++) {
                         const option = document.createElement('option');
                         option.value = i;
@@ -192,12 +392,7 @@
                         if (i === index) option.selected = true;
                         orderSelect.appendChild(option);
                     }
-                    
-                    // 番号が変更されたら一気に移動
-                    orderSelect.onchange = (e) => {
-                        const newIndex = parseInt(e.target.value);
-                        jumpLink(index, newIndex);
-                    };
+                    orderSelect.onchange = (e) => jumpLink(index, parseInt(e.target.value));
                     
                     orderControl.appendChild(orderSelect);
                     card.appendChild(orderControl);
@@ -210,12 +405,16 @@
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const btn = document.getElementById('toggleModeBtn');
+            const mainContent = document.getElementById('mainContent');
+            
             if (isEditMode) {
                 btn.textContent = '確定して戻る';
                 btn.classList.add('active');
+                mainContent.classList.add('edit-mode-active');
             } else {
                 btn.textContent = '⚙️ 管理モード';
                 btn.classList.remove('active');
+                mainContent.classList.remove('edit-mode-active');
                 resetForm();
             }
             renderLinks();
@@ -227,17 +426,14 @@
             const temp = savedLinks[index];
             savedLinks[index] = savedLinks[targetIndex];
             savedLinks[targetIndex] = temp;
-            saveAndRefresh();
+            saveToServer();
         }
         
-        // 指定した番号へ一気に移動する関数
         function jumpLink(oldIndex, newIndex) {
             if (oldIndex === newIndex) return;
-            // 古い場所からリンクを取り出す
             const item = savedLinks.splice(oldIndex, 1)[0];
-            // 新しい場所にリンクを挿入する
             savedLinks.splice(newIndex, 0, item);
-            saveAndRefresh();
+            saveToServer();
         }
 
         function handleSubmit() {
@@ -251,9 +447,7 @@
                 alert('サイト名とURLの両方を入力してください。');
                 return;
             }
-            if (!/^https?:\/\//i.test(url)) {
-                url = 'https://' + url;
-            }
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
             
             if (editIndex === -1) {
                 savedLinks.push({ name: name, url: url });
@@ -261,8 +455,8 @@
                 savedLinks[editIndex] = { name: name, url: url };
             }
             
-            saveAndRefresh();
             resetForm();
+            saveToServer();
         }
         
         function startEdit(index) {
@@ -271,39 +465,27 @@
             document.getElementById('siteUrl').value = link.url;
             document.getElementById('editIndex').value = index;
             document.getElementById('formTitle').textContent = `📝 「${link.name}」を編集中`;
-            document.getElementById('submitBtn').textContent = '変更を保存する';
+            document.getElementById('submitBtn').textContent = '変更してクラウドに保存';
             document.getElementById('cancelBtn').style.display = 'block';
             document.querySelector('.form-box').scrollIntoView({ behavior: 'smooth' });
         }
         
         function deleteLink(index) {
-            if (confirm(`「${savedLinks[index].name}」を削除しますか？`)) {
+            if (confirm(`「${savedLinks[index].name}」を削除しますか？\n（クラウドからも削除されます）`)) {
                 savedLinks.splice(index, 1);
-                saveAndRefresh();
-                if (parseInt(document.getElementById('editIndex').value) === index) {
-                    resetForm();
-                }
+                if (parseInt(document.getElementById('editIndex').value) === index) resetForm();
+                saveToServer();
             }
         }
         
-        // 入力フォームのクリア
         function resetForm() {
             document.getElementById('siteName').value = '';
             document.getElementById('siteUrl').value = '';
             document.getElementById('editIndex').value = '-1';
             document.getElementById('formTitle').textContent = '🔗 新しいリンクを追加';
-            document.getElementById('submitBtn').textContent = 'リストに追加する';
+            document.getElementById('submitBtn').textContent = '追加してクラウドに保存';
             document.getElementById('cancelBtn').style.display = 'none';
         }
-        
-        // 保存と画面のリフレッシュ
-        function saveAndRefresh() {
-            localStorage.setItem('tesla_custom_links', JSON.stringify(savedLinks));
-            renderLinks();
-        }
-
-        // ページ読み込み時にリンク一覧を表示
-        renderLinks();
     </script>
 </body>
 </html>
