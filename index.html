@@ -8,19 +8,6 @@
         /* テスラのUIにマッチするダークテーマ */
         body { background-color: #111111; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; text-align: center; margin: 0; }
         
-        /* 🔒 認証画面のスタイル（テスラの大きなキーパッド風） */
-        #authContainer { max-width: 320px; margin: 80px auto 0 auto; padding: 30px 20px; background: #1c1c1e; border: 1px solid #2c2c2e; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        #authContainer h2 { font-size: 20px; margin-bottom: 20px; color: #aaa; }
-        .pin-display { background: #2c2c2e; border: 1px solid #3a3a3c; font-size: 32px; letter-spacing: 15px; padding: 10px; border-radius: 8px; margin-bottom: 25px; height: 45px; display: flex; align-items: center; justify-content: center; color: #e82127; font-weight: bold; }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .key-btn { background: #2c2c2e; border: 1px solid #3a3a3c; color: white; font-size: 24px; font-weight: bold; padding: 15px 0; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; }
-        .key-btn:active { background: #3a3a3c; }
-        .key-btn.clear { background: #3a3a3c; font-size: 16px; }
-        #errorMsg { color: #e82127; font-size: 14px; margin-top: 15px; height: 20px; font-weight: bold; }
-
-        /* 🌐 メインコンテンツ（認証成功まで非表示） */
-        #mainContent { display: none; }
-        
         .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 850px; margin: 0 auto 25px auto; padding: 0 10px; }
         h1 { font-size: 26px; color: #e82127; margin: 0; font-weight: bold; }
         
@@ -57,6 +44,12 @@
         .edit-btn { background-color: #007aff; }
         .delete-btn { background-color: #e82127; }
 
+        /* 番号指定での一括移動コントロール（下部に配置） */
+        .order-control { display: none; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); z-index: 10; }
+        .edit-mode .order-control { display: flex; }
+        .order-select { background-color: #2c2c2e; color: #fff; border: 1px solid #3a3a3c; border-radius: 12px; padding: 2px 6px; font-size: 12px; cursor: pointer; outline: none; text-align: center; }
+        .order-select:focus { border-color: #e82127; }
+
         /* 編集・追加共通フォームエリア */
         .form-box { background-color: #1c1c1e; border: 1px solid #2c2c2e; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: left; }
         .form-box h2 { font-size: 18px; margin-top: 0; color: #aaa; text-align: center; }
@@ -73,28 +66,7 @@
 </head>
 <body>
 
-    <!-- 🔒 簡易暗証番号キーパッド -->
-    <div id="authContainer">
-        <h2>PINを入力してください</h2>
-        <div class="pin-display" id="pinDisplay"></div>
-        <div class="keypad">
-            <button class="key-btn" onclick="pressKey('1')">1</button>
-            <button class="key-btn" onclick="pressKey('2')">2</button>
-            <button class="key-btn" onclick="pressKey('3')">3</button>
-            <button class="key-btn" onclick="pressKey('4')">4</button>
-            <button class="key-btn" onclick="pressKey('5')">5</button>
-            <button class="key-btn" onclick="pressKey('6')">6</button>
-            <button class="key-btn" onclick="pressKey('7')">7</button>
-            <button class="key-btn" onclick="pressKey('8')">8</button>
-            <button class="key-btn" onclick="pressKey('9')">9</button>
-            <button class="key-btn clear" onclick="pressKey('C')">消去</button>
-            <button class="key-btn" onclick="pressKey('0')">0</button>
-            <button class="key-btn clear" onclick="pressKey('B')">⌫</button>
-        </div>
-        <div id="errorMsg"></div>
-    </div>
-
-    <!-- 🌐 メインのポータル画面（初期状態は非表示） -->
+    <!-- 🌐 メインのポータル画面 -->
     <div id="mainContent">
         <div class="header-container">
             <h1>Tesla Portal</h1>
@@ -122,45 +94,6 @@
     </div>
 
     <script>
-        // 🔑 【重要】ここに好きな4桁の暗証番号を設定してください
-        const CORRECT_PIN = "1234";
-
-        let currentInput = "";
-
-        // キーパッド入力の処理
-        function pressKey(key) {
-            const display = document.getElementById('pinDisplay');
-            const error = document.getElementById('errorMsg');
-            error.textContent = "";
-
-            if (key === 'C') {
-                currentInput = "";
-            } else if (key === 'B') {
-                currentInput = currentInput.slice(0, -1);
-            } else {
-                if (currentInput.length < 4) {
-                    currentInput += key;
-                }
-            }
-
-            display.textContent = "●".repeat(currentInput.length);
-
-            // 4桁入力された瞬間に判定
-            if (currentInput.length === 4) {
-                setTimeout(() => {
-                    if (currentInput === CORRECT_PIN) {
-                        document.getElementById('authContainer').style.display = 'none';
-                        document.getElementById('mainContent').style.display = 'block';
-                        renderLinks();
-                    } else {
-                        error.textContent = "PINが正しくありません。";
-                        currentInput = "";
-                        display.textContent = "";
-                    }
-                }, 200);
-            }
-        }
-
         // 初期お気に入りリスト（ストレージが空のときのみ使用）
         const defaultLinks = [
             { name: "YouTube", url: "https://youtube.com" },
@@ -243,6 +176,33 @@
                 controls.appendChild(delBtn);
                 
                 card.appendChild(controls);
+
+                // 番号指定で一気に移動するセレクトボックス
+                if (isEditMode) {
+                    const orderControl = document.createElement('div');
+                    orderControl.className = 'order-control';
+                    const orderSelect = document.createElement('select');
+                    orderSelect.className = 'order-select';
+                    
+                    // 現在のリンク数分だけ選択肢を作る
+                    for (let i = 0; i < savedLinks.length; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = (i + 1) + '番目';
+                        if (i === index) option.selected = true;
+                        orderSelect.appendChild(option);
+                    }
+                    
+                    // 番号が変更されたら一気に移動
+                    orderSelect.onchange = (e) => {
+                        const newIndex = parseInt(e.target.value);
+                        jumpLink(index, newIndex);
+                    };
+                    
+                    orderControl.appendChild(orderSelect);
+                    card.appendChild(orderControl);
+                }
+
                 container.appendChild(card);
             });
         }
@@ -270,6 +230,16 @@
             saveAndRefresh();
         }
         
+        // 指定した番号へ一気に移動する関数
+        function jumpLink(oldIndex, newIndex) {
+            if (oldIndex === newIndex) return;
+            // 古い場所からリンクを取り出す
+            const item = savedLinks.splice(oldIndex, 1)[0];
+            // 新しい場所にリンクを挿入する
+            savedLinks.splice(newIndex, 0, item);
+            saveAndRefresh();
+        }
+
         function handleSubmit() {
             const nameInput = document.getElementById('siteName');
             const urlInput = document.getElementById('siteUrl');
@@ -331,6 +301,9 @@
             localStorage.setItem('tesla_custom_links', JSON.stringify(savedLinks));
             renderLinks();
         }
+
+        // ページ読み込み時にリンク一覧を表示
+        renderLinks();
     </script>
 </body>
 </html>
