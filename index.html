@@ -33,6 +33,7 @@
         .tabs-container::-webkit-scrollbar { height: 5px; }
         .tabs-container::-webkit-scrollbar-thumb { background-color: #3a3a3c; border-radius: 10px; }
         .tabs-container::-webkit-scrollbar-track { background: transparent; }
+
         .tab-btn { background: #1c1c1e; border: 1px solid #3a3a3c; color: #aaa; padding: 10px 22px; border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .tab-btn.active { background: #e82127; color: #fff; border-color: #e82127; }
         .tab-btn:active { transform: scale(0.95); }
@@ -389,7 +390,7 @@
                 btn.textContent = tag;
                 btn.onclick = () => {
                     currentTab = tag;
-                    localStorage.setItem('tesla_portal_tab', currentTab);
+                    localStorage.setItem('tesla_portal_tab', currentTab); // タブ選択状態を保存
                     refreshUI();
                 };
                 container.appendChild(btn);
