@@ -19,8 +19,20 @@
         .manage-toggle-btn.active { background-color: #e82127; color: #fff; border-color: #e82127; }
 
         /* タブナビゲーション */
-        .tabs-container { display: flex; overflow-x: auto; gap: 10px; max-width: 850px; margin: 0 auto 20px auto; padding-bottom: 5px; scrollbar-width: none; }
-        .tabs-container::-webkit-scrollbar { display: none; }
+        .tabs-container { 
+            display: flex; 
+            justify-content: flex-start;
+            overflow-x: auto; 
+            gap: 10px; 
+            max-width: 850px; 
+            margin: 0 auto 20px auto; 
+            padding: 0 10px 8px 10px; 
+            -webkit-overflow-scrolling: touch; /* テスラでのスムーズなスワイプ操作を有効化 */
+        }
+        /* スクロールバーを完全に消さず、細く表示して隠れているタブがあることを視覚的に伝える */
+        .tabs-container::-webkit-scrollbar { height: 5px; }
+        .tabs-container::-webkit-scrollbar-thumb { background-color: #3a3a3c; border-radius: 10px; }
+        .tabs-container::-webkit-scrollbar-track { background: transparent; }
         .tab-btn { background: #1c1c1e; border: 1px solid #3a3a3c; color: #aaa; padding: 10px 22px; border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .tab-btn.active { background: #e82127; color: #fff; border-color: #e82127; }
         .tab-btn:active { transform: scale(0.95); }
