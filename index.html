@@ -169,7 +169,7 @@
 
         let savedLinks = [];
         let isEditMode = false;
-        let currentTab = "すべて";
+        let currentTab = localStorage.getItem('tesla_portal_tab') || "すべて";
         let currentPinInput = "";
         let authPin = localStorage.getItem('tesla_portal_pin');
 
@@ -364,7 +364,10 @@
             const tabs = ["すべて", ...allTags];
             
             // 選択中のタブが消えたタグだった場合は「すべて」に戻す
-            if (!tabs.includes(currentTab)) currentTab = "すべて";
+            if (!tabs.includes(currentTab)) {
+                currentTab = "すべて";
+                localStorage.setItem('tesla_portal_tab', "すべて");
+            }
 
             tabs.forEach(tag => {
                 const btn = document.createElement('button');
@@ -372,6 +375,7 @@
                 btn.textContent = tag;
                 btn.onclick = () => {
                     currentTab = tag;
+                    localStorage.setItem('tesla_portal_tab', currentTab);
                     refreshUI();
                 };
                 container.appendChild(btn);
