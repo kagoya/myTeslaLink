@@ -85,10 +85,11 @@
         .delete-btn { background-color: #e82127; }
 
         /* 番号指定での一括移動コントロール */
-        .order-control { display: none; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 10; } /* ★マイナス値をやめてカード内に収める */
+        .order-control { display: none; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 10; } 
         .edit-mode .order-control { display: flex; }
-        /* ★テスラブラウザ向けに、幅(min-width)とプルダウンの見た目(appearance)を強制指定 */
-        .order-select { background-color: #2c2c2e; color: #fff; border: 1px solid #666; border-radius: 8px; padding: 4px 8px; font-size: 13px; cursor: pointer; outline: none; text-align: center; min-width: 85px; appearance: auto; -webkit-appearance: auto; }
+        /* ★プルダウンからボタンに変更 */
+        .order-btn { background-color: #2c2c2e; color: #fff; border: 1px solid #666; border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; outline: none; text-align: center; white-space: nowrap; font-weight: bold; }
+        .order-btn:active { background-color: #3a3a3c; }
 
         /* 編集・追加共通フォームエリア */
         .form-box { display: none; background-color: #1c1c1e; border: 1px solid #2c2c2e; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: left; }
@@ -469,19 +470,29 @@
                 if (isEditMode) {
                     const orderControl = document.createElement('div');
                     orderControl.className = 'order-control';
-                    const orderSelect = document.createElement('select');
-                    orderSelect.className = 'order-select';
                     
-                    for (let i = 0; i < savedLinks.length; i++) {
-                        const option = document.createElement('option');
-                        option.value = i;
-                        option.textContent = (i + 1) + '番目';
-                        if (i === index) option.selected = true;
-                        orderSelect.appendChild(option);
-                    }
-                    orderSelect.onchange = (e) => jumpLink(index, parseInt(e.target.value));
+                    // ★プルダウンをやめ、クリックで入力画面が出るボタンに変更
+                    const orderBtn = document.createElement('button');
+                    orderBtn.className = 'order-btn';
+                    orderBtn.textContent = `🔃 ${index + 1}番目 (移動)`;
                     
-                    orderControl.appendChild(orderSelect);
+                    orderBtn.onclick = () => {
+                        const max = savedLinks.length;
+                        // ブラウザ標準の入力ダイアログを表示
+                        const userInput = prompt(`移動先の番号を入力してください (1 〜 ${max})`, index + 1);
+                        
+                        if (userInput !== null && userInput.trim() !== "") {
+                            const newNum = parseInt(userInput, 10);
+                            // 入力された値が正しい範囲の数字かチェック
+                            if (!isNaN(newNum) && newNum >= 1 && newNum <= max) {
+                                jumpLink(index, newNum - 1);
+                            } else {
+                                alert(`1から${max}までの正しい数字を入力してください。`);
+                            }
+                        }
+                    };
+                    
+                    orderControl.appendChild(orderBtn);
                     card.appendChild(orderControl);
                 }
 
